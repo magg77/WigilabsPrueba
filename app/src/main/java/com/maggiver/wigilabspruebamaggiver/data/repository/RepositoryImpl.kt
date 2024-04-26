@@ -1,7 +1,12 @@
 package com.maggiver.wigilabspruebamaggiver.data.repository
 
+import android.content.Context
+import com.maggiver.wigilabspruebamaggiver.core.utils.ConnectionManager
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.DataSourceLocalContract
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.server.DataSourceRemoteContract
 import javax.inject.Inject
 
@@ -27,11 +32,30 @@ import javax.inject.Inject
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-class RepositoryImpl @Inject constructor(private val dataSourceRemoteContract: DataSourceRemoteContract) :
+class RepositoryImpl @Inject constructor(
+    private val dataSourceRemote: DataSourceRemoteContract,
+    private val dataSourceLocal: DataSourceLocalContract
+) :
     RepositoryContract {
 
-    override suspend fun repoGetAllMoviePopular(): ResourceState<PopularMovieResponse> {
-        return dataSourceRemoteContract.getMoviePopular()
-    }
+    override suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse> {
 
+        val dataMovieResponse = dataSourceRemote.getMoviePopular()
+        //saved local movies
+        dataMovieResponse.data.results.forEachIndexed { index, value ->
+            dataSourceLocal.insertMovie(
+                MovieEntity(
+                    id = value.id,
+                    posterPath = value.posterPath,
+                    title = value.title,
+                    overview = value.overview,
+                    voteCount = value.voteCount,
+                    releaseDate = value.releaseDate,
+                    popularity = value.popularity,
+                    favoriteState = false
+                )
+            )
+        }
+        return dataSourceRemote.getMoviePopular()
+    }
 }

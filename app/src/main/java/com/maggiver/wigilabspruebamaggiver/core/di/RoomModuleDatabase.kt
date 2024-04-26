@@ -1,15 +1,21 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.core.di
 
 import android.content.Context
-import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import androidx.room.Room
+import com.maggiver.wigilabspruebamaggiver.core.valueObject.AppDatabaseRoom
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
  * @EMAIL: dmacevedo00@misena.edu.co
  *
@@ -26,8 +32,24 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-interface PopularMovieUserCaseContract {
+@Module
+@InstallIn(SingletonComponent::class)
+object RoomModuleDatabase {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    private const val BD_NAME_ROOM = "MoviesWigilabs"
+
+    @Singleton
+    @Provides
+    fun provideRoomInstance(@ApplicationContext context: Context) = synchronized(this) {
+        Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabaseRoom::class.java,
+            BD_NAME_ROOM
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalDao(db: AppDatabaseRoom) = db.movieDao()
 
 }

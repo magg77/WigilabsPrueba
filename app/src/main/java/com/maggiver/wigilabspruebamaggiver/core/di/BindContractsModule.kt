@@ -1,5 +1,7 @@
 package com.maggiver.wigilabspruebamaggiver.core.di
 
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.DataSourceLocalContract
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.DataSourceLocalImpl
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.server.DataSourceRemoteContract
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.server.DataSourceRemoteImpl
 import com.maggiver.wigilabspruebamaggiver.data.repository.RepositoryContract
@@ -45,5 +47,8 @@ abstract class BindContractsModule {
 
     @Binds
     abstract fun binDataSourceRemote(dataRemote: DataSourceRemoteImpl): DataSourceRemoteContract
+
+    @Binds
+    abstract fun binDataSourceLocal(dataLocal: DataSourceLocalImpl): DataSourceLocalContract
 
 }

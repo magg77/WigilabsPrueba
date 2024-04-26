@@ -1,17 +1,16 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal
 
-import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
- * @EMAIL: dmacevedo00@misena.edu.co
+ * @EMAIL: escenariopaloma@gmail.co
  *
  * Todos los derechos de @AUTHOR y de Propiedad Intelectual, son reservados y protegidos por su creador y se phohibe su reprodución, edición, copias, conservación, divulgación y comercialización sin consentimiento escrito.
  * En caso que un tercero haga uso indebidode esta propiedad intelectual, su @AUTHOR, puede ejercer una acción legal indemnizatoria por el uso indebido de sus obras legitimas.
@@ -25,9 +24,10 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  *                         pueden ser transferibles a terceros con la autorización del titular del software en virtud de la autonomía de su voluntad, en cuyo caso, el autor o titular de la obra denominado cedente transmite total o parcialmente sus derechos a un tercero a través de un contrato de cesión de derechos.
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
+ 
+interface DataSourceLocalContract{
 
-interface PopularMovieUserCaseContract {
-
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    suspend fun getAllMovie(): ResourceState<List<MovieEntity>>
+    suspend fun insertMovie(movieEntity: MovieEntity)
 
 }

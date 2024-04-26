@@ -1,15 +1,16 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.core.utils
 
 import android.content.Context
-import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.util.Log
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
  * @EMAIL: dmacevedo00@misena.edu.co
  *
@@ -26,8 +27,26 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-interface PopularMovieUserCaseContract {
+object ConnectionManager {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("connect", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("connect", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("connect", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+        return false
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.maggiver.wigilabspruebamaggiver.domain
 
+import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 import com.maggiver.wigilabspruebamaggiver.data.repository.RepositoryContract
@@ -30,6 +31,7 @@ import javax.inject.Inject
 class PopularMovieUserCase @Inject constructor(private val repo: RepositoryContract) :
     PopularMovieUserCaseContract {
 
-    override suspend fun invoke(): ResourceState<PopularMovieResponse> = repo.repoGetAllMoviePopular()
+    override suspend fun invoke(requireContext: Context): ResourceState<PopularMovieResponse> =
+        repo.repoGetAllMoviePopular(requireContext)
 
 }

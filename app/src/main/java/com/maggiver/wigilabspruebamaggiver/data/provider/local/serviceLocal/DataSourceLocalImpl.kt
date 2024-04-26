@@ -1,15 +1,15 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal
 
-import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import javax.inject.Inject
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
  * @EMAIL: dmacevedo00@misena.edu.co
  *
@@ -26,8 +26,14 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-interface PopularMovieUserCaseContract {
+class DataSourceLocalImpl @Inject constructor(private val localServiceDao: LocalServiceContract_Dao): DataSourceLocalContract {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    override suspend fun getAllMovie(): ResourceState<List<MovieEntity>> {
+        return ResourceState.SuccesState(localServiceDao.getAllMovie())
+    }
+
+    override suspend fun insertMovie(movieEntity: MovieEntity) {
+        localServiceDao.insertMovie(movieEntity)
+    }
 
 }

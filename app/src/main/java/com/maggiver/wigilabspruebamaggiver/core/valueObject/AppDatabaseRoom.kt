@@ -1,15 +1,16 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.core.valueObject
 
-import android.content.Context
-import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.LocalServiceContract_Dao
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
  * @EMAIL: dmacevedo00@misena.edu.co
  *
@@ -26,8 +27,9 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-interface PopularMovieUserCaseContract {
+@Database(entities = [MovieEntity::class], version = 1, exportSchema = true)
+abstract class AppDatabaseRoom: RoomDatabase() {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    abstract fun movieDao(): LocalServiceContract_Dao
 
 }

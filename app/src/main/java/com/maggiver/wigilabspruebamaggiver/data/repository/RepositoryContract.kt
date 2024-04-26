@@ -1,5 +1,6 @@
 package com.maggiver.wigilabspruebamaggiver.data.repository
 
+import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 
@@ -26,5 +27,5 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  */
 
 interface RepositoryContract {
-    suspend fun repoGetAllMoviePopular(): ResourceState<PopularMovieResponse>
+    suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse>
 }

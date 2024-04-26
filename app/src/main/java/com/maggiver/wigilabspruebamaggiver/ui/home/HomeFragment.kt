@@ -12,9 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maggiver.wigilabspruebamaggiver.R
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result
 import com.maggiver.wigilabspruebamaggiver.databinding.FragmentHomeBinding
 import com.maggiver.wigilabspruebamaggiver.presentation.PopularMovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +53,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModelPopularMovie.getAllCategoriesViewModel().observe(viewLifecycleOwner, Observer {
+        viewModelPopularMovie.getAllCategoriesViewModel(requireContext()).observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResourceState.LoadingState -> {
                     binding.psHome.visibility = View.VISIBLE

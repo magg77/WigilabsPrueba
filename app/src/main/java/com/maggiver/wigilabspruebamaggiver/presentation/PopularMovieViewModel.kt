@@ -1,7 +1,7 @@
 package com.maggiver.wigilabspruebamaggiver.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -42,10 +42,10 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
     }
     val text: LiveData<String> = _text*/
 
-    fun getAllCategoriesViewModel() = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+    fun getAllCategoriesViewModel(requireContext: Context) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
         emit(ResourceState.LoadingState())
         try {
-            emit(useCase.invoke())
+            emit(useCase.invoke(requireContext))
         } catch (e: Exception) {
             emit(ResourceState.FailureState(e))
         }

@@ -42,7 +42,7 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
     }
     val text: LiveData<String> = _text*/
 
-    fun getAllCategoriesViewModel(requireContext: Context) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+    fun getAllPopularMovieViewModel(requireContext: Context) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
         emit(ResourceState.LoadingState())
         try {
             emit(useCase.invoke(requireContext))
@@ -55,6 +55,15 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
         emit(ResourceState.LoadingState())
         try {
             emit(useCase.updateMovieFavoriteUseCase(favoriteState, idMovie))
+        } catch (e: Exception) {
+            emit(ResourceState.FailureState(e))
+        }
+    }
+
+    fun getAllMovieFavorite() = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+        emit(ResourceState.LoadingState())
+        try {
+            emit(useCase.getAllMoviesFavoriteUseCase())
         } catch (e: Exception) {
             emit(ResourceState.FailureState(e))
         }

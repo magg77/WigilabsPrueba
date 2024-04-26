@@ -1,9 +1,8 @@
-package com.maggiver.wigilabspruebamaggiver.ui.home
+package com.maggiver.wigilabspruebamaggiver.ui.movie
 
 import android.app.Dialog
 import android.content.ContextWrapper
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
@@ -93,7 +91,7 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
         val tvDate: TextView = view.findViewById(R.id.tv_dateRelease) as TextView
         val tvPopularity: TextView = view.findViewById(R.id.tv_popularity) as TextView
         val tvDescriptionDetailMovie: TextView = view.findViewById(R.id.tv_descripcion_detalle) as TextView
-        val saveFavoriteDetailMovie : Button = view.findViewById(R.id.saveFavoriteDetailMovie) as MaterialButton
+        val btnSaveFavoriteDetailMovie : Button = view.findViewById(R.id.saveFavoriteDetailMovie) as MaterialButton
 
         titleMovieDetail.text = args.movieDetail.title
         Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${args.movieDetail.posterPath}")
@@ -105,8 +103,9 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
         tvPopularity.text = args.movieDetail.popularity.toString()
         tvDescriptionDetailMovie.text = args.movieDetail.overview
 
-        saveFavoriteDetailMovie.setOnClickListener {
+        btnSaveFavoriteDetailMovie.setOnClickListener {
             observerSaveMovieFavorite(favoriteState = true, idMovie = args.movieDetail.id)
+            it.visibility = View.INVISIBLE
         }
 
 
@@ -126,6 +125,7 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
                         "${it.data}",
                         Toast.LENGTH_SHORT
                     ).show()
+
                 }
 
                 is ResourceState.FailureState -> {

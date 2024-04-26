@@ -40,24 +40,6 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse> {
 
-        /*val dataMovieResponse = dataSourceRemote.getMoviePopular()
-        //saved local movies
-        dataMovieResponse.data.results.forEachIndexed { index, value ->
-            dataSourceLocal.insertMovie(
-                MovieEntity(
-                    id = value.id,
-                    posterPath = value.posterPath,
-                    title = value.title,
-                    overview = value.overview,
-                    voteCount = value.voteCount,
-                    releaseDate = value.releaseDate,
-                    popularity = value.popularity,
-                    favoriteState = false
-                )
-            )
-        }
-        return dataSourceRemote.getMoviePopular()*/
-
         var dataMovieResponse: ResourceState.SuccesState<PopularMovieResponse>
 
 
@@ -82,7 +64,7 @@ class RepositoryImpl @Inject constructor(
             }
             return dataMovieResponse
         } else {
-            var movieListEntity: ResourceState<List<MovieEntity>> = dataSourceLocal.getAllMovie()
+            var movieListEntityAll: ResourceState<List<MovieEntity>> = dataSourceLocal.getAllMovie()
             var popularMovieResponse: PopularMovieResponse = PopularMovieResponse(
                 page = 0,
                 totalPages = 0,
@@ -90,10 +72,9 @@ class RepositoryImpl @Inject constructor(
             )
             var datalist = mutableListOf<Result>()
 
-
-            when (movieListEntity) {
+            when (movieListEntityAll) {
                 is ResourceState.SuccesState -> {
-                    movieListEntity.data.forEachIndexed { index, value ->
+                    movieListEntityAll.data.forEachIndexed { index, value ->
                         datalist.add(
                             Result(
                                 id = value.id,
@@ -123,6 +104,39 @@ class RepositoryImpl @Inject constructor(
     override suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) : ResourceState<String> {
         dataSourceLocal.updateMovieFavorite(favoriteState, idMovie)
         return ResourceState.SuccesState("Movie selected favorite")
+    }
+
+    override suspend fun getAllMoviesFavorites(): ResourceState<PopularMovieResponse> {
+        var movieListEntityFavorite: ResourceState<List<MovieEntity>> = dataSourceLocal.getAllMovieFavorite(favoriteState = true)
+        var popularMovieResponseFavorite: PopularMovieResponse = PopularMovieResponse(
+            page = 0,
+            totalPages = 0,
+            totalResults = 0
+        )
+        var datalist = mutableListOf<Result>()
+
+        when (movieListEntityFavorite) {
+            is ResourceState.SuccesState -> {
+                movieListEntityFavorite.data.forEachIndexed { index, value ->
+                    datalist.add(
+                        Result(
+                            id = value.id,
+                            posterPath = value.posterPath,
+                            title = value.title,
+                            overview = value.overview,
+                            voteCount = value.voteCount,
+                            releaseDate = value.releaseDate,
+                            popularity = value.popularity
+                        )
+                    )
+                }
+                popularMovieResponseFavorite.results = datalist
+                return ResourceState.SuccesState(popularMovieResponseFavorite)
+            }
+            else -> {
+                return ResourceState.SuccesState(popularMovieResponseFavorite)
+            }
+        }
     }
 
 

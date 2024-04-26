@@ -1,17 +1,21 @@
-package com.maggiver.wigilabspruebamaggiver.domain
+package com.maggiver.wigilabspruebamaggiver.ui.favorite
 
 import android.content.Context
-import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
-import com.maggiver.wigilabspruebamaggiver.data.repository.RepositoryContract
-import javax.inject.Inject
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.maggiver.wigilabspruebamaggiver.core.utils.Constants
+import com.maggiver.wigilabspruebamaggiver.core.valueObject.BaseViewHolder
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result
+import com.maggiver.wigilabspruebamaggiver.databinding.FavoriteCardviewBinding
 
 
 /**
  * Created by
  * @AUTHOR: Daniel Maggiver Acevedo
  * @NICK_NAME: mackgaru
- * @DATE: 25,abril,2024
+ * @DATE: 26,abril,2024
  * @COMPAN: Juice
  * @EMAIL: dmacevedo00@misena.edu.co
  *
@@ -28,22 +32,41 @@ import javax.inject.Inject
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-class PopularMovieUserCase @Inject constructor(private val repo: RepositoryContract) :
-    PopularMovieUserCaseContract {
+class AdapterFavorite(
+    private val context: Context,
+    private val favoriteMovieList: List<Result>,
+    private val onItemClickListener: (Result) -> Unit
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    override suspend fun invoke(requireContext: Context): ResourceState<PopularMovieResponse> =
-        repo.repoGetAllMoviePopular(requireContext)
-
-    override suspend fun updateMovieFavoriteUseCase(
-        favoriteState: Boolean,
-        idMovie: Int
-    ): ResourceState<String> {
-        return repo.updateMovieFavorite(favoriteState, idMovie)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
+        val itemBinding = FavoriteCardviewBinding.inflate(LayoutInflater.from(context), parent, false)
+        return MainViewHolder(itemBinding)
     }
 
-    override suspend fun getAllMoviesFavoriteUseCase(): ResourceState<PopularMovieResponse> {
-        return repo.getAllMoviesFavorites()
+    override fun getItemCount(): Int {
+        return favoriteMovieList.size
+    }
+
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        when (holder) {
+            is MainViewHolder -> holder.bind(favoriteMovieList[position], position)
+        }
     }
 
 
+    inner class MainViewHolder(val binding: FavoriteCardviewBinding) :
+        BaseViewHolder<Result>(binding.root) {
+
+        override fun bind(item: Result, position: Int) = with(binding) {
+
+            Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${item.posterPath}")
+                .into(imvMovieFavorite)
+
+            tvTitleMovieFavorite.text = item.title
+            tvDescripShortFavorite.text = item.overview
+            binding.contentCardView.setOnClickListener {
+                onItemClickListener(favoriteMovieList[position])
+            }
+        }
+    }
 }

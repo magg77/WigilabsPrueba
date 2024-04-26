@@ -1,4 +1,4 @@
-package com.maggiver.wigilabspruebamaggiver.ui.home
+package com.maggiver.wigilabspruebamaggiver.ui.movie
 
 
 /**

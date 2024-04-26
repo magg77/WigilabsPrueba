@@ -31,5 +31,6 @@ interface RepositoryContract {
     suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse>
 
     suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
+    suspend fun getAllMoviesFavorites(): ResourceState<PopularMovieResponse>
 
 }

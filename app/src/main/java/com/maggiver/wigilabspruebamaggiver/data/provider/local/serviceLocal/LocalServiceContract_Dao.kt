@@ -34,10 +34,15 @@ interface LocalServiceContract_Dao {
     @Query("SELECT * FROM MovieEntity")
     suspend fun getAllMovie(): List<MovieEntity>
 
+    @Query("SELECT * FROM MovieEntity WHERE favoriteState = :favoriteState")
+    suspend fun getAllMovieFavorite(favoriteState: Boolean): List<MovieEntity>
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movieEntity: MovieEntity)
 
     @Query("UPDATE MovieEntity SET favoriteState = :favoriteState WHERE id = :idMovie")
     suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int)
+
 
 }

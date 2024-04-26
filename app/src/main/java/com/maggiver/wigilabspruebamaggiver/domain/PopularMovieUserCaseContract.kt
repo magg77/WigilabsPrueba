@@ -32,4 +32,6 @@ interface PopularMovieUserCaseContract {
 
     suspend fun updateMovieFavoriteUseCase(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
 
+    suspend fun getAllMoviesFavoriteUseCase(): ResourceState<PopularMovieResponse>
+
 }

@@ -33,6 +33,10 @@ class DataSourceLocalImpl @Inject constructor(private val localServiceDao: Local
         return ResourceState.SuccesState(localServiceDao.getAllMovie())
     }
 
+    override suspend fun getAllMovieFavorite(favoriteState: Boolean): ResourceState<List<MovieEntity>> {
+        return ResourceState.SuccesState(localServiceDao.getAllMovieFavorite(favoriteState))
+    }
+
     override suspend fun insertMovie(movieEntity: MovieEntity) {
         localServiceDao.insertMovie(movieEntity)
     }
@@ -40,6 +44,8 @@ class DataSourceLocalImpl @Inject constructor(private val localServiceDao: Local
     override suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) {
         localServiceDao.updateMovieFavorite(favoriteState, idMovie)
     }
+
+
 
 
 }

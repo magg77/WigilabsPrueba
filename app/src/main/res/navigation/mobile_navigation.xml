@@ -7,29 +7,27 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.maggiver.wigilabspruebamaggiver.ui.home.HomeFragment"
+        android:name="com.maggiver.wigilabspruebamaggiver.ui.movie.MovieFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_movie" >
         <action
             android:id="@+id/action_navigation_home_to_detailMovieFragmentFullScreen"
             app:destination="@id/detailMovieFragmentFullScreen" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.maggiver.wigilabspruebamaggiver.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_favorite"
+        android:name="com.maggiver.wigilabspruebamaggiver.ui.favorite.FavoriteFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.maggiver.wigilabspruebamaggiver.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_navigation_favorite_to_detailMovieFragmentFullScreen"
+            app:destination="@id/detailMovieFragmentFullScreen" />
+    </fragment>
 
     <dialog
         android:id="@+id/detailMovieFragmentFullScreen"
-        android:name="com.maggiver.wigilabspruebamaggiver.ui.home.DetailMovieFragmentFullScreen"
+        android:name="com.maggiver.wigilabspruebamaggiver.ui.movie.DetailMovieFragmentFullScreen"
         android:label="fragment_fullscreen_detail_movie"
         tools:layout="@layout/fragment_fullscreen_detail_movie">
 

@@ -30,4 +30,6 @@ interface DataSourceLocalContract{
     suspend fun getAllMovie(): ResourceState<List<MovieEntity>>
     suspend fun insertMovie(movieEntity: MovieEntity)
 
+    suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int)
+
 }

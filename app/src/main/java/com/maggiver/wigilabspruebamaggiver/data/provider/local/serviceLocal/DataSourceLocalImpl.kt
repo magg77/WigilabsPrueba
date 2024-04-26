@@ -26,7 +26,8 @@ import javax.inject.Inject
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-class DataSourceLocalImpl @Inject constructor(private val localServiceDao: LocalServiceContract_Dao): DataSourceLocalContract {
+class DataSourceLocalImpl @Inject constructor(private val localServiceDao: LocalServiceContract_Dao) :
+    DataSourceLocalContract {
 
     override suspend fun getAllMovie(): ResourceState<List<MovieEntity>> {
         return ResourceState.SuccesState(localServiceDao.getAllMovie())
@@ -35,5 +36,10 @@ class DataSourceLocalImpl @Inject constructor(private val localServiceDao: Local
     override suspend fun insertMovie(movieEntity: MovieEntity) {
         localServiceDao.insertMovie(movieEntity)
     }
+
+    override suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) {
+        localServiceDao.updateMovieFavorite(favoriteState, idMovie)
+    }
+
 
 }

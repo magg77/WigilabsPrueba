@@ -30,4 +30,6 @@ interface PopularMovieUserCaseContract {
 
     suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
 
+    suspend fun updateMovieFavoriteUseCase(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
+
 }

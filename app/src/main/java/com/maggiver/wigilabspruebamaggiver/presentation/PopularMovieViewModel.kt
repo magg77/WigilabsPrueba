@@ -51,5 +51,16 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
         }
     }
 
+    fun updateMovieFavoriteViewModel(favoriteState: Boolean, idMovie: Int) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+        emit(ResourceState.LoadingState())
+        try {
+            emit(useCase.updateMovieFavoriteUseCase(favoriteState, idMovie))
+        } catch (e: Exception) {
+            emit(ResourceState.FailureState(e))
+        }
+    }
+
+
+
 
 }

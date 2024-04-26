@@ -12,5 +12,6 @@ Features:
 * Agregar peliculas a favoritas para guardar en la bases de datos local, funciona sin conexión a internet.
 
 ![My App Notes](https://github.com/magg77/WigilabsPrueba/blob/master/screens/group.png)
+![My App Notes](https://github.com/magg77/WigilabsPrueba/blob/master/screens/Wireframe-note.jpeg)
 
 

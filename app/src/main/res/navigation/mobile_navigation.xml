@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.maggiver.wigilabspruebamaggiver.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_detailMovieFragmentFullScreen"
+            app:destination="@id/detailMovieFragmentFullScreen" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +26,16 @@
         android:name="com.maggiver.wigilabspruebamaggiver.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <dialog
+        android:id="@+id/detailMovieFragmentFullScreen"
+        android:name="com.maggiver.wigilabspruebamaggiver.ui.home.DetailMovieFragmentFullScreen"
+        android:label="fragment_fullscreen_detail_movie"
+        tools:layout="@layout/fragment_fullscreen_detail_movie">
+
+        <argument
+            android:name="movieDetail"
+            app:argType="com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result" />
+    </dialog>
+
 </navigation>

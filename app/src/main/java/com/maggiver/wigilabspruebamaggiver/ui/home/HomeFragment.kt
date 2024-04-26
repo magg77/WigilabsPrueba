@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maggiver.wigilabspruebamaggiver.R
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result
 import com.maggiver.wigilabspruebamaggiver.databinding.FragmentHomeBinding
@@ -48,7 +50,7 @@ class HomeFragment : Fragment() {
     //custom methods *******************************************************************************
     private fun setupLayouts() {
         binding.rvHomeFragment.layoutManager = GridLayoutManager(
-            requireContext(), 2,  LinearLayoutManager.VERTICAL, false
+            requireContext(), 2, LinearLayoutManager.VERTICAL, false
         )
     }
 
@@ -62,8 +64,15 @@ class HomeFragment : Fragment() {
                 is ResourceState.SuccesState -> {
                     binding.psHome.visibility = View.GONE
                     binding.rvHomeFragment.adapter = AdapterMovies(
-                        requireContext(), it.data.results, onItemClickListener = {dataResult ->
+                        context = requireContext(),
+                        moviesList = it.data.results,
+                        onItemClickListener = { dataResult ->
                             Log.i("data", "$dataResult")
+                            val bundle: Bundle = Bundle()
+                            bundle.putParcelable("movieDetail", dataResult)
+
+                            val action = HomeFragmentDirections.actionNavigationHomeToDetailMovieFragmentFullScreen(dataResult)
+                            findNavController().navigate(action)
                         }
                     )
                 }

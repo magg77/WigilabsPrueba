@@ -40,7 +40,7 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse> {
 
-        val dataMovieResponse = dataSourceRemote.getMoviePopular()
+        /*val dataMovieResponse = dataSourceRemote.getMoviePopular()
         //saved local movies
         dataMovieResponse.data.results.forEachIndexed { index, value ->
             dataSourceLocal.insertMovie(
@@ -56,6 +56,65 @@ class RepositoryImpl @Inject constructor(
                 )
             )
         }
-        return dataSourceRemote.getMoviePopular()
+        return dataSourceRemote.getMoviePopular()*/
+
+        var dataMovieResponse: ResourceState.SuccesState<PopularMovieResponse>
+
+
+        if (ConnectionManager.isNetworkAvailable(requireContext)) {
+            dataMovieResponse = dataSourceRemote.getMoviePopular()
+
+            //saved local movies
+            dataMovieResponse.data.results.forEachIndexed { index, value ->
+                dataSourceLocal.insertMovie(
+                    MovieEntity(
+                        id = value.id,
+                        posterPath = value.posterPath,
+                        title = value.title,
+                        overview = value.overview,
+                        voteCount = value.voteCount,
+                        releaseDate = value.releaseDate,
+                        popularity = value.popularity,
+                        favoriteState = false
+
+                    )
+                )
+            }
+            return dataMovieResponse
+        } else {
+            var movieListEntity: ResourceState<List<MovieEntity>> = dataSourceLocal.getAllMovie()
+            var popularMovieResponse: PopularMovieResponse = PopularMovieResponse(
+                page = 0,
+                totalPages = 0,
+                totalResults = 0
+            )
+            var datalist = mutableListOf<Result>()
+
+
+            when (movieListEntity) {
+                is ResourceState.SuccesState -> {
+                    movieListEntity.data.forEachIndexed { index, value ->
+                        datalist.add(
+                            Result(
+                                id = value.id,
+                                posterPath = value.posterPath,
+                                title = value.title,
+                                overview = value.overview,
+                                voteCount = value.voteCount,
+                                releaseDate = value.releaseDate,
+                                popularity = value.popularity
+                            )
+                        )
+                    }
+                    popularMovieResponse.results = datalist
+                }
+                else -> {
+                    return ResourceState.SuccesState(popularMovieResponse)
+                }
+            }
+            return ResourceState.SuccesState(popularMovieResponse)
+        }
+
+
     }
 }

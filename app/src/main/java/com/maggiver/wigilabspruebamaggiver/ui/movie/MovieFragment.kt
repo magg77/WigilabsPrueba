@@ -60,7 +60,7 @@ class MovieFragment : Fragment() {
                     is ResourceState.SuccesState -> {
                         binding.psHome.visibility = View.GONE
                         binding.rvHomeFragment.adapter = AdapterMovies(context = requireContext(),
-                            moviesList = it.data.results,
+                            moviesList = it.data,
                             onItemClickListener = { dataResult ->
                                 Log.i("data", "$dataResult")
                                 val bundle: Bundle = Bundle()

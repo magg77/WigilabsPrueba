@@ -30,13 +30,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maggiver.wigilabspruebamaggiver.core.utils.Constants
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.BaseViewHolder
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.Result
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.databinding.MovieCardviewBinding
 
 class AdapterMovies(
     private val context: Context,
-    private val moviesList: List<Result>,
-    private val onItemClickListener : (Result) -> Unit
+    private val moviesList: List<MovieCustom>,
+    private val onItemClickListener : (MovieCustom) -> Unit
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -54,12 +54,10 @@ class AdapterMovies(
         }
     }
 
-
-
     inner class MainViewHolder(val binding: MovieCardviewBinding) :
-        BaseViewHolder<Result>(binding.root) {
+        BaseViewHolder<MovieCustom>(binding.root) {
 
-        override fun bind(item: Result, position: Int) = with(binding) {
+        override fun bind(item: MovieCustom, position: Int) = with(binding) {
 
             Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${item.posterPath}")
                 .into(imvMovie)

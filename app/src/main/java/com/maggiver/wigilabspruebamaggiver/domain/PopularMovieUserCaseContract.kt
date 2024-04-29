@@ -2,6 +2,7 @@ package com.maggiver.wigilabspruebamaggiver.domain
 
 import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 
 
@@ -28,10 +29,10 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
 
 interface PopularMovieUserCaseContract {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<PopularMovieResponse>
+    suspend operator fun invoke(requireContext: Context): ResourceState<List<MovieCustom>>
 
     suspend fun updateMovieFavoriteUseCase(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
 
-    suspend fun getAllMoviesFavoriteUseCase(): ResourceState<PopularMovieResponse>
+    suspend fun getAllMoviesFavoriteUseCase(): ResourceState<List<MovieCustom>>
 
 }

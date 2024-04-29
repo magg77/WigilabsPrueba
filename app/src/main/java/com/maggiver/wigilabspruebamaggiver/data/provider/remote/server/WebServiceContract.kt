@@ -29,7 +29,7 @@ import retrofit2.http.Query
 interface WebServiceContract {
 
     @GET("movie/popular")
-    suspend fun GetMoviePopular(
+    suspend fun GetMoviePopularRemote(
         @Query("api_key") api_key: String,
         @Query("language") language: String
     ): PopularMovieResponse

@@ -27,10 +27,11 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntit
  
 interface DataSourceLocalContract{
 
-    suspend fun getAllMovie(): ResourceState<List<MovieEntity>>
-    suspend fun getAllMovieFavorite(favoriteState: Boolean): ResourceState<List<MovieEntity>>
-
     suspend fun insertMovie(movieEntity: MovieEntity)
+
+    suspend fun getAllMovie(): ResourceState<List<MovieEntity>>
+
+    suspend fun getAllMovieFavorite(favoriteState: Boolean): ResourceState<List<MovieEntity>>
 
     suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int)
 

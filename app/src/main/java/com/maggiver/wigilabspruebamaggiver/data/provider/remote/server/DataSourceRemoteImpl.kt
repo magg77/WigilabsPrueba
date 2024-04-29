@@ -1,5 +1,6 @@
 package com.maggiver.wigilabspruebamaggiver.data.provider.remote.server
 
+import com.maggiver.wigilabspruebamaggiver.core.utils.Constants
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 import kotlinx.coroutines.Dispatchers
@@ -31,11 +32,11 @@ import javax.inject.Inject
 class DataSourceRemoteImpl @Inject constructor(private val webServiceContract: WebServiceContract) :
     DataSourceRemoteContract {
 
-    override suspend fun getMoviePopular(): ResourceState.SuccesState<PopularMovieResponse> {
-        var dataResponse = PopularMovieResponse()
+    override suspend fun getMoviePopularRemote(): ResourceState.SuccesState<PopularMovieResponse> {
+        var dataResponse: PopularMovieResponse
         withContext(Dispatchers.IO) {
             dataResponse =
-                webServiceContract.GetMoviePopular("09963e300150f9831c46a1828a82a984", "en-US")
+                webServiceContract.GetMoviePopularRemote(api_key = Constants.API_KEY, language = Constants.LANGUAGE)
         }
         return ResourceState.SuccesState(dataResponse)
     }

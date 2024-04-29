@@ -3,6 +3,7 @@ package com.maggiver.wigilabspruebamaggiver.data.repository
 import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 
 
@@ -28,9 +29,16 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
  */
 
 interface RepositoryContract {
-    suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<PopularMovieResponse>
+    //REMOTE
+    suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<List<MovieCustom>>
 
+
+    //LOCAL
+
+    suspend fun insertAllMovieRemote(data: PopularMovieResponse)
+
+    suspend fun getAllMovie(): ResourceState<List<MovieCustom>>
+    suspend fun getAllMovieFavorite(): ResourceState<List<MovieCustom>>
     suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
-    suspend fun getAllMoviesFavorites(): ResourceState<PopularMovieResponse>
 
 }

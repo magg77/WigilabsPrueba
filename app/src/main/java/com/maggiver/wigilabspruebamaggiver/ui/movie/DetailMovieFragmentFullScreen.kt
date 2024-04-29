@@ -93,18 +93,18 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
         val tvDescriptionDetailMovie: TextView = view.findViewById(R.id.tv_descripcion_detalle) as TextView
         val btnSaveFavoriteDetailMovie : Button = view.findViewById(R.id.saveFavoriteDetailMovie) as MaterialButton
 
-        titleMovieDetail.text = args.movieDetail.title
-        Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${args.movieDetail.posterPath}")
+        titleMovieDetail.text = args.movieDetailCustom.title
+        Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${args.movieDetailCustom.posterPath}")
             .optionalCenterCrop()
             .into(imageMovieDetail)
 
-        tvVote.text = args.movieDetail.voteCount.toString()
-        tvDate.text = args.movieDetail.releaseDate
-        tvPopularity.text = args.movieDetail.popularity.toString()
-        tvDescriptionDetailMovie.text = args.movieDetail.overview
+        tvVote.text = args.movieDetailCustom.voteCount.toString()
+        tvDate.text = args.movieDetailCustom.releaseDate
+        tvPopularity.text = args.movieDetailCustom.popularity.toString()
+        tvDescriptionDetailMovie.text = args.movieDetailCustom.overview
 
         btnSaveFavoriteDetailMovie.setOnClickListener {
-            observerSaveMovieFavorite(favoriteState = true, idMovie = args.movieDetail.id)
+            observerSaveMovieFavorite(favoriteState = true, idMovie = args.movieDetailCustom.id)
             it.visibility = View.INVISIBLE
         }
 

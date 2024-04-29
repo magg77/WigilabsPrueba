@@ -3,6 +3,7 @@ package com.maggiver.wigilabspruebamaggiver.data.provider.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 
 
 /**
@@ -25,7 +26,7 @@ import androidx.room.PrimaryKey
  *                         pueden ser transferibles a terceros con la autorización del titular del software en virtud de la autonomía de su voluntad, en cuyo caso, el autor o titular de la obra denominado cedente transmite total o parcialmente sus derechos a un tercero a través de un contrato de cesión de derechos.
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
- 
+
 @Entity(tableName = "MovieEntity")
 data class MovieEntity(
     @PrimaryKey val id: Int,
@@ -38,4 +39,13 @@ data class MovieEntity(
     @ColumnInfo val favoriteState: Boolean = false
 )
 
-//fun ResponseMovieRemote_to_MovieEntity()
+fun MovieEntity.toMovieCustom() = MovieCustom(
+    this.id,
+    this.posterPath,
+    this.title,
+    this.overview,
+    this.voteCount,
+    this.releaseDate,
+    this.popularity,
+    this.favoriteState
+)

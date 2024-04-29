@@ -1,7 +1,10 @@
 package com.maggiver.wigilabspruebamaggiver.data.provider.remote.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
 import kotlinx.parcelize.Parcelize
 
 
@@ -28,44 +31,72 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PopularMovieResponse(
-    @SerializedName("page")
-    val page: Int = 0,
-    @SerializedName("results")
-    var results: List<Result> = listOf(),
-    @SerializedName("total_pages")
-    val totalPages: Int = 0,
-    @SerializedName("total_results")
-    val totalResults: Int = 0
-): Parcelable
+    @SerializedName("page") val page: Int = 0,
+    @SerializedName("results") var results: List<Result> = listOf(),
+    @SerializedName("total_pages") val totalPages: Int = 0,
+    @SerializedName("total_results") val totalResults: Int = 0
+) : Parcelable
 
 @Parcelize
 data class Result(
-    @SerializedName("id")
-    val id: Int = 0,
-    @SerializedName("adult")
-    val adult: Boolean = true,
-    @SerializedName("backdrop_path")
-    val backdropPath: String = "",
-    @SerializedName("genre_ids")
-    val genreIds: List<Int> = listOf(),
-    @SerializedName("original_language")
-    val originalLanguage: String = "",
-    @SerializedName("original_title")
-    val originalTitle: String = "",
-    @SerializedName("overview")
-    val overview: String = "",
-    @SerializedName("popularity")
-    val popularity: Double = 0.0,
-    @SerializedName("poster_path")
-    val posterPath: String = "",
-    @SerializedName("release_date")
-    val releaseDate: String = "",
-    @SerializedName("title")
-    val title: String = "",
-    @SerializedName("video")
-    val video: Boolean = false,
-    @SerializedName("vote_average")
-    val voteAverage: Double = 0.0,
-    @SerializedName("vote_count")
-    val voteCount: Int = 0
-): Parcelable
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("adult") val adult: Boolean = true,
+    @SerializedName("backdrop_path") val backdropPath: String = "",
+    @SerializedName("genre_ids") val genreIds: List<Int> = listOf(),
+    @SerializedName("original_language") val originalLanguage: String = "",
+    @SerializedName("original_title") val originalTitle: String = "",
+    @SerializedName("overview") val overview: String = "",
+    @SerializedName("popularity") val popularity: Double = 0.0,
+    @SerializedName("poster_path") val posterPath: String = "",
+    @SerializedName("release_date") val releaseDate: String = "",
+    @SerializedName("title") val title: String = "",
+    @SerializedName("video") val video: Boolean = false,
+    @SerializedName("vote_average") val voteAverage: Double = 0.0,
+    @SerializedName("vote_count") val voteCount: Int = 0
+) : Parcelable
+
+@Parcelize
+data class ListMovieCustom(
+    val listMovie: List<MovieCustom> = listOf()
+) : Parcelable
+
+@Parcelize
+data class MovieCustom(
+    @SerializedName("id") val id: Int,
+    @SerializedName("posterPath") val posterPath: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("overview") val overview: String,
+    @SerializedName("voteCount") val voteCount: Int,
+    @SerializedName("releaseDate") val releaseDate: String,
+    @SerializedName("popularity") val popularity: Double,
+    @SerializedName("favoriteState") val favoriteState: Boolean = false
+) : Parcelable
+
+fun PopularMovieResponse.toListMovieCustom(): ListMovieCustom {
+    val resultList = mutableListOf<MovieCustom>()
+    this.results.forEachIndexed{index, value ->
+        resultList.add(value.toMovieCustom())
+    }
+    return ListMovieCustom(resultList)
+}
+fun Result.toMovieCustom(): MovieCustom = MovieCustom(
+    id = this.id,
+    posterPath = this.posterPath,
+    title = this.title,
+    overview = this.overview,
+    voteCount = this.voteCount,
+    releaseDate = this.releaseDate,
+    popularity = this.popularity,
+    favoriteState = false
+)
+
+fun Result.toMovieEntity(): MovieEntity = MovieEntity(
+    this.id,
+    this.posterPath,
+    this.title,
+    this.overview,
+    this.voteCount,
+    this.releaseDate,
+    this.popularity,
+    favoriteState = false
+)

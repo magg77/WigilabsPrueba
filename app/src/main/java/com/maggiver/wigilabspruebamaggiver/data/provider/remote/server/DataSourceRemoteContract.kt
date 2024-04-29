@@ -27,6 +27,6 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
 
 interface DataSourceRemoteContract {
 
-    suspend fun getMoviePopular(): ResourceState.SuccesState<PopularMovieResponse>
+    suspend fun getMoviePopularRemote(): ResourceState.SuccesState<PopularMovieResponse>
 
 }

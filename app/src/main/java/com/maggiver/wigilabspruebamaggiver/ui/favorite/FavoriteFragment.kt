@@ -60,8 +60,9 @@ class FavoriteFragment : Fragment() {
 
                     is ResourceState.SuccesState -> {
                         binding.psFavorite.visibility = View.GONE
-                        binding.rvFavoriteFragment.adapter = AdapterFavorite(context = requireContext(),
-                            favoriteMovieList = it.data.results,
+                        binding.rvFavoriteFragment.adapter = AdapterFavorite(
+                            context = requireContext(),
+                            favoriteMovieList = it.data,
                             onItemClickListener = { dataResult ->
                                 Log.i("favorite", "$dataResult")
 

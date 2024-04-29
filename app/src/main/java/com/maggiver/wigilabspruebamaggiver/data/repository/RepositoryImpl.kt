@@ -108,9 +108,9 @@ class RepositoryImpl @Inject constructor(
     override suspend fun updateMovieFavorite(
         favoriteState: Boolean,
         idMovie: Int
-    ): ResourceState<String> {
+    ): ResourceState.SuccesState<Boolean> {
         dataSourceLocal.updateMovieFavorite(favoriteState, idMovie)
-        return ResourceState.SuccesState("Movie selected favorite")
+        return ResourceState.SuccesState(!favoriteState)
     }
 
 }

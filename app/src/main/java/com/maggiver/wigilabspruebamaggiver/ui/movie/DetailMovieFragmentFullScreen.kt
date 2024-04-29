@@ -39,6 +39,7 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
     private lateinit var alertLoader: AlertDialog
     private val args by navArgs<DetailMovieFragmentFullScreenArgs>()
     private var dataResultMovie: Result? = Result()
+    lateinit var btnFavoriteDetailMovie : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +92,8 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
         val tvDate: TextView = view.findViewById(R.id.tv_dateRelease) as TextView
         val tvPopularity: TextView = view.findViewById(R.id.tv_popularity) as TextView
         val tvDescriptionDetailMovie: TextView = view.findViewById(R.id.tv_descripcion_detalle) as TextView
-        val btnSaveFavoriteDetailMovie : Button = view.findViewById(R.id.saveFavoriteDetailMovie) as MaterialButton
+        btnFavoriteDetailMovie = view.findViewById(R.id.btnFavoriteDetailMovie) as MaterialButton
+
 
         titleMovieDetail.text = args.movieDetailCustom.title
         Glide.with(context).load("${Constants.IMG_MOVIE_DB_COVER}${args.movieDetailCustom.posterPath}")
@@ -103,9 +105,18 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
         tvPopularity.text = args.movieDetailCustom.popularity.toString()
         tvDescriptionDetailMovie.text = args.movieDetailCustom.overview
 
-        btnSaveFavoriteDetailMovie.setOnClickListener {
-            observerSaveMovieFavorite(favoriteState = true, idMovie = args.movieDetailCustom.id)
-            it.visibility = View.INVISIBLE
+        if (args.movieDetailCustom.favoriteState) {
+            btnFavoriteDetailMovie.text = "Eliminar de Favoritos"
+        } else {
+            btnFavoriteDetailMovie.text = "Agregar a Favoritos"
+        }
+
+        btnFavoriteDetailMovie.setOnClickListener {
+            if (args.movieDetailCustom.favoriteState) {
+                observerSaveMovieFavorite(favoriteState = false, idMovie = args.movieDetailCustom.id)
+            } else {
+                observerSaveMovieFavorite(favoriteState = true, idMovie = args.movieDetailCustom.id)
+            }
         }
 
 
@@ -120,9 +131,10 @@ class DetailMovieFragmentFullScreen : DialogFragment() {
 
                 is ResourceState.SuccesState -> {
                     //binding.psHome.visibility = View.GONE
+
                     Toast.makeText(
                         requireContext(),
-                        "${it.data}",
+                        if(it.data) "Fue eliminado con exito" else "Fue agregado",
                         Toast.LENGTH_SHORT
                     ).show()
 

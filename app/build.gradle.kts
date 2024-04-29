@@ -73,8 +73,10 @@ dependencies {
         implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     //coroutines
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_android"]}")
+        implementation("androidx.activity:activity-ktx:1.9.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_android"]}")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_android"]}")
+
 
     //live-data & view-model
         implementation("androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.extra["liveData"]}")

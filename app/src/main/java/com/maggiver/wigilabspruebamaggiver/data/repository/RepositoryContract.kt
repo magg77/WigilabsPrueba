@@ -39,6 +39,6 @@ interface RepositoryContract {
 
     suspend fun getAllMovie(): ResourceState<List<MovieCustom>>
     suspend fun getAllMovieFavorite(): ResourceState<List<MovieCustom>>
-    suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) : ResourceState<String>
+    suspend fun updateMovieFavorite(favoriteState: Boolean, idMovie: Int) : ResourceState<Boolean>
 
 }

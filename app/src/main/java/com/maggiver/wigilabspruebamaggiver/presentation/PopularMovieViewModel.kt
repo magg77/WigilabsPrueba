@@ -1,14 +1,17 @@
 package com.maggiver.wigilabspruebamaggiver.presentation
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.domain.PopularMovieUserCaseContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
@@ -51,14 +54,17 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
         }
     }
 
-    fun updateMovieFavoriteViewModel(favoriteState: Boolean, idMovie: Int) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
-        emit(ResourceState.LoadingState())
-        try {
-            emit(useCase.updateMovieFavoriteUseCase(favoriteState, idMovie))
-        } catch (e: Exception) {
-            emit(ResourceState.FailureState(e))
+
+
+    fun updateMovieFavoriteViewModel(favoriteState: Boolean, idMovie: Int) =
+        liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+            emit(ResourceState.LoadingState())
+            try {
+                emit(useCase.updateMovieFavoriteUseCase(favoriteState, idMovie))
+            } catch (e: Exception) {
+                emit(ResourceState.FailureState(e))
+            }
         }
-    }
 
     fun getAllMovieFavorite() = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
         emit(ResourceState.LoadingState())
@@ -68,8 +74,6 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
             emit(ResourceState.FailureState(e))
         }
     }
-
-
 
 
 }

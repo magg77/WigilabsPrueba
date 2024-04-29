@@ -69,7 +69,7 @@ data class MovieCustom(
     @SerializedName("voteCount") val voteCount: Int,
     @SerializedName("releaseDate") val releaseDate: String,
     @SerializedName("popularity") val popularity: Double,
-    @SerializedName("favoriteState") val favoriteState: Boolean = false
+    @SerializedName("favoriteState") var favoriteState: Boolean = false
 ) : Parcelable
 
 fun PopularMovieResponse.toListMovieCustom(): ListMovieCustom {

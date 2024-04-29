@@ -38,7 +38,7 @@ class PopularMovieUserCase @Inject constructor(private val repo: RepositoryContr
     override suspend fun updateMovieFavoriteUseCase(
         favoriteState: Boolean,
         idMovie: Int
-    ): ResourceState<String> {
+    ): ResourceState<Boolean> {
         return repo.updateMovieFavorite(favoriteState, idMovie)
     }
 

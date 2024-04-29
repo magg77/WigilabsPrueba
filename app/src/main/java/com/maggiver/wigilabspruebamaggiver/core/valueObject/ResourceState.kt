@@ -27,6 +27,6 @@ sealed class ResourceState<out T> {
 
     class LoadingState<out T>: ResourceState<T>()
     class SuccesState<out T>(val data: T): ResourceState<T>()
-    class FailureState<out T>(val exception: Exception): ResourceState<T>()
+    class FailureState<out T>(val exception: Throwable): ResourceState<T>()
 
 }

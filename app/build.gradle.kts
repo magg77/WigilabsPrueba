@@ -46,8 +46,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
 
         /*sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17*/
@@ -55,7 +55,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         //jvmTarget = ("17")
         //freeCompilerArgs += listOf("-Xjsr305=strict", "-Xskip-runtime-version-check", "-Xskip-metadata-version-check")
     }
@@ -76,6 +76,7 @@ dependencies {
         implementation("androidx.activity:activity-ktx:1.9.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_android"]}")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_android"]}")
+    //org.jetbrains.kotlinx:kotlinx-coroutines-play-services
 
 
     //live-data & view-model

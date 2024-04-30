@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -29,10 +30,10 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntit
  */
 
 @Dao
-interface LocalServiceContract_Dao {
+interface LocalServiceDaoContract {
 
     @Query("SELECT * FROM MovieEntity")
-    suspend fun getAllMovie(): List<MovieEntity>
+    fun getAllMovie(): Flow<List<MovieEntity>>
 
     @Query("SELECT * FROM MovieEntity WHERE favoriteState = :favoriteState")
     suspend fun getAllMovieFavorite(favoriteState: Boolean): List<MovieEntity>

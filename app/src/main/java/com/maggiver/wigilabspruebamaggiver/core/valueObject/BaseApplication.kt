@@ -1,6 +1,7 @@
 package com.maggiver.wigilabspruebamaggiver.core.valueObject
 
 import android.app.Application
+import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -27,3 +28,16 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class BaseApplication: Application()
+    /*override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
+
+    companion object{
+        lateinit var instance: BaseApplication
+
+        val CONTEXT_MY_APP: Context
+            get() {
+            return instance.applicationContext
+        }
+    }*/

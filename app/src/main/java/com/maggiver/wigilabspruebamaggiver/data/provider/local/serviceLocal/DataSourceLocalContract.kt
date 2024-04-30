@@ -2,6 +2,7 @@ package com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal
 
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -29,7 +30,7 @@ interface DataSourceLocalContract{
 
     suspend fun insertMovie(movieEntity: MovieEntity)
 
-    suspend fun getAllMovie(): ResourceState<List<MovieEntity>>
+    fun getAllMovie(): Flow<List<MovieEntity>>
 
     suspend fun getAllMovieFavorite(favoriteState: Boolean): ResourceState<List<MovieEntity>>
 

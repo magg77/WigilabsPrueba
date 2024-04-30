@@ -4,14 +4,26 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.maggiver.wigilabspruebamaggiver.core.valueObject.BaseApplication
+import com.maggiver.wigilabspruebamaggiver.core.valueObject.NetworkResult
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.domain.PopularMovieUserCaseContract
+import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -40,20 +52,67 @@ import javax.inject.Inject
 class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovieUserCaseContract) :
     ViewModel() {
 
-    /*private val _text = MutableLiveData<String>().apply {
+    /*
+    private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
-    val text: LiveData<String> = _text*/
+    val text: LiveData<String> = _text
+    */
 
-    fun getAllPopularMovieViewModel(requireContext: Context) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
-        emit(ResourceState.LoadingState())
-        try {
-            emit(useCase.invoke(requireContext))
-        } catch (e: Exception) {
-            emit(ResourceState.FailureState(e))
+    private val _uiState: MutableStateFlow<ResourceState<List<MovieCustom>>> =
+        MutableStateFlow(ResourceState.LoadingState())
+    val uiState: StateFlow<ResourceState<List<MovieCustom>>> = _uiState
+
+    @get:Inject
+    val baseApplication: BaseApplication
+        get() {
+            return BaseApplication()
         }
+
+
+    /*fun getAllPopularMovieViewModel(requireContext: Context) =
+        liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
+            emit(ResourceState.LoadingState())
+            try {
+                emit(useCase.invoke(requireContext))
+            } catch (e: Exception) {
+                emit(ResourceState.FailureState(e))
+            }
+        }*/
+
+    fun moviePopular1(context: Context) = flow<ResourceState<List<MovieCustom>>> {
+        runCatching {
+            useCase.invoke(context)
+        }.onSuccess {
+            it.map { resourceList ->
+                emit(resourceList)
+            }
+        }.onFailure { throwable ->
+            emit(ResourceState.FailureState(throwable))
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ResourceState.LoadingState()
+    )
+
+    fun moviePopular2(context: Context) = viewModelScope.launch {
+        useCase.invoke(context)
+            .onEach {
+                _uiState.value = it
+            }.launchIn(viewModelScope)
     }
 
+
+    /*fun moviePopular3() = viewModelScope.launch {
+        _uiState.value = ResourceState.LoadingState()
+        useCase.invoke(baseApplication)
+            .catch { e ->
+                _uiState.value = ResourceState.FailureState(e)
+            }.collect{
+                _uiState.value = ResourceState.SuccesState(it)
+            }
+    }*/
 
 
     fun updateMovieFavoriteViewModel(favoriteState: Boolean, idMovie: Int) =

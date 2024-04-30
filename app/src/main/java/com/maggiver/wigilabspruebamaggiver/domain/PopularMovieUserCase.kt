@@ -5,6 +5,7 @@ import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 import com.maggiver.wigilabspruebamaggiver.data.repository.RepositoryContract
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
@@ -32,7 +33,7 @@ import javax.inject.Inject
 class PopularMovieUserCase @Inject constructor(private val repo: RepositoryContract) :
     PopularMovieUserCaseContract {
 
-    override suspend fun invoke(requireContext: Context): ResourceState<List<MovieCustom>> =
+    override suspend fun invoke(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
         repo.repoGetAllMoviePopular(requireContext)
 
     override suspend fun updateMovieFavoriteUseCase(

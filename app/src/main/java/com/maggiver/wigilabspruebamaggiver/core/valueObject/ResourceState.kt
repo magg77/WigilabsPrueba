@@ -23,10 +23,37 @@ package com.maggiver.wigilabspruebamaggiver.core.valueObject
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-sealed class ResourceState<out T> {
+sealed class ResourceState<T> {
+    class LoadingState<T>: ResourceState<T>()
+    class SuccesState<T>(val data: T): ResourceState<T>()
+    class FailureState<T>(val exception: Throwable): ResourceState<T>()
+}
 
-    class LoadingState<out T>: ResourceState<T>()
-    class SuccesState<out T>(val data: T): ResourceState<T>()
-    class FailureState<out T>(val exception: Throwable): ResourceState<T>()
+sealed class ApiState<out T> {
+    object Loading : ApiState<Nothing>()
+    data class Success<out T>(val data: T): ApiState<T>()
+    data class Failure(val exception: Throwable): ApiState<Nothing>()
 
+    override fun toString(): String {
+        return when (this) {
+            is Loading -> "Loading"
+            is Success -> "Success $data"
+            is Failure -> "Failure $exception"
+        }
+    }
+}
+
+sealed class Result<T> {
+    data class Loading<T>(val isLoading: Boolean) : Result<T>()
+    data class Success<T>(val data: T) : Result<T>()
+    data class Failure<T>(val errorMessage: String) : Result<T>()
+}
+
+sealed class NetworkResult<T>(
+    val data: T? = null,
+    val message: String? = null
+) {
+    class Success<T>(data: T) : NetworkResult<T>(data)
+    class Error<T>(message: String, data: T? = null) : NetworkResult<T>(data, message)
+    class Loading<T> : NetworkResult<T>()
 }

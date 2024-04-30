@@ -3,7 +3,7 @@ package com.maggiver.wigilabspruebamaggiver.domain
 import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -29,7 +29,7 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
 
 interface PopularMovieUserCaseContract {
 
-    suspend operator fun invoke(requireContext: Context): ResourceState<List<MovieCustom>>
+    suspend operator fun invoke(requireContext: Context): Flow<ResourceState<List<MovieCustom>>>
 
     suspend fun updateMovieFavoriteUseCase(favoriteState: Boolean, idMovie: Int) : ResourceState<Boolean>
 

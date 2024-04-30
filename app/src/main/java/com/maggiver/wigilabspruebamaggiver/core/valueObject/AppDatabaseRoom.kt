@@ -3,7 +3,7 @@ package com.maggiver.wigilabspruebamaggiver.core.valueObject
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
-import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.LocalServiceContract_Dao
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.LocalServiceDaoContract
 
 
 /**
@@ -30,6 +30,6 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.Loca
 @Database(entities = [MovieEntity::class], version = 1, exportSchema = true)
 abstract class AppDatabaseRoom: RoomDatabase() {
 
-    abstract fun movieDao(): LocalServiceContract_Dao
+    abstract fun movieDao(): LocalServiceDaoContract
 
 }

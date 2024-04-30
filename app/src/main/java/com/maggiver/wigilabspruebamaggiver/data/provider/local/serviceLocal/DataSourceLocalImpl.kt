@@ -2,6 +2,7 @@ package com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal
 
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
@@ -26,15 +27,15 @@ import javax.inject.Inject
  * @Derecho_de_transformacion_distribucion_y_reproduccion_de_la_obra: facultad que tiene el titular o autor de un software de realizar cambios totales o parciales al código de su obra; ponerla a disposición del público o autorizar su difusión.
  */
 
-class DataSourceLocalImpl @Inject constructor(private val localServiceDao: LocalServiceContract_Dao) :
+class DataSourceLocalImpl @Inject constructor(private val localServiceDao: LocalServiceDaoContract) :
     DataSourceLocalContract {
 
     override suspend fun insertMovie(movieEntity: MovieEntity) {
         localServiceDao.insertMovie(movieEntity)
     }
 
-    override suspend fun getAllMovie(): ResourceState<List<MovieEntity>> {
-        return ResourceState.SuccesState(localServiceDao.getAllMovie())
+    override fun getAllMovie(): Flow<List<MovieEntity>> {
+        return localServiceDao.getAllMovie()
     }
 
     override suspend fun getAllMovieFavorite(favoriteState: Boolean): ResourceState<List<MovieEntity>> {

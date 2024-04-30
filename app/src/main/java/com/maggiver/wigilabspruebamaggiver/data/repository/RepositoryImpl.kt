@@ -3,12 +3,20 @@ package com.maggiver.wigilabspruebamaggiver.data.repository
 import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.utils.ConnectionManager
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
+import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.MovieEntity
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.toMovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.DataSourceLocalContract
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.toMovieEntity
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.server.DataSourceRemoteContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
@@ -39,20 +47,30 @@ class RepositoryImpl @Inject constructor(
 ) :
     RepositoryContract {
 
-    override suspend fun repoGetAllMoviePopular(requireContext: Context): ResourceState<List<MovieCustom>> {
+    override suspend fun repoGetAllMoviePopular(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
+        channelFlow {
 
-        val dataMovieResponse: ResourceState.SuccesState<PopularMovieResponse>
-        return if (ConnectionManager.isNetworkAvailable(requireContext)) {
-            dataMovieResponse = dataSourceRemote.getMoviePopularRemote()
+            send(ResourceState.LoadingState())
 
-            //saved local movies
-            insertAllMovieRemote(dataMovieResponse.data)
+            val dataMovieResponse: ResourceState.SuccesState<PopularMovieResponse>
+            if (ConnectionManager.isNetworkAvailable(requireContext)) {
+                dataMovieResponse = dataSourceRemote.getMoviePopularRemote()
 
+                //saved local movies
+                insertAllMovieRemote(dataMovieResponse.data)
+            }
+
+            val movieCustom: MutableList<MovieCustom> = mutableListOf()
             getAllMovie()
-        } else {
-            getAllMovie()
+                .flowOn(Dispatchers.IO)
+                .collect(){movieEntity ->
+                    movieEntity.map { movie ->
+                        movieCustom.add(movie.toMovieCustom())
+                    }
+                    val list: List<MovieCustom> = movieCustom
+                    send(ResourceState.SuccesState(list))
+                }
         }
-    }
 
     override suspend fun insertAllMovieRemote(data: PopularMovieResponse) {
         data.results.forEachIndexed { index, result ->
@@ -62,25 +80,9 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllMovie(): ResourceState<List<MovieCustom>> {
-        val movieLocal = dataSourceLocal.getAllMovie()
-        val listMovieCustom: MutableList<MovieCustom> = mutableListOf()
-        return try {
-            when (movieLocal) {
-                is ResourceState.SuccesState -> {
-                    movieLocal.data.forEachIndexed { index, movieEntity ->
-                        listMovieCustom.add(movieEntity.toMovieCustom())
-                    }
-                    ResourceState.SuccesState(listMovieCustom)
-                }
-
-                else -> {
-                    ResourceState.SuccesState(listMovieCustom)
-                }
-            }
-        } catch (e: Exception) {
-            ResourceState.FailureState(e)
-        }
+    override fun getAllMovie(): Flow<List<MovieEntity>> {
+        val data = dataSourceLocal.getAllMovie()
+        return data
     }
 
     override suspend fun getAllMovieFavorite(): ResourceState<List<MovieCustom>> {

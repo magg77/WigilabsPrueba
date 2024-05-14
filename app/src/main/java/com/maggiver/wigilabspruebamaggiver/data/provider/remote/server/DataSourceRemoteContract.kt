@@ -2,6 +2,8 @@ package com.maggiver.wigilabspruebamaggiver.data.provider.remote.server
 
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 
 /**
@@ -27,6 +29,6 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMov
 
 interface DataSourceRemoteContract {
 
-    suspend fun getMoviePopularRemote(): ResourceState.SuccesState<PopularMovieResponse>
+    suspend fun getMoviePopularRemote(): Response<PopularMovieResponse>
 
 }

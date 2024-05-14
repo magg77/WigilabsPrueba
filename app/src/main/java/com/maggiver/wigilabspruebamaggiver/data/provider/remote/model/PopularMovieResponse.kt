@@ -72,12 +72,12 @@ data class MovieCustom(
     @SerializedName("favoriteState") var favoriteState: Boolean = false
 ) : Parcelable
 
-fun PopularMovieResponse.toListMovieCustom(): ListMovieCustom {
+fun PopularMovieResponse.toListMovieCustom(): List<MovieCustom> {
     val resultList = mutableListOf<MovieCustom>()
     this.results.forEachIndexed{index, value ->
         resultList.add(value.toMovieCustom())
     }
-    return ListMovieCustom(resultList)
+    return resultList
 }
 fun Result.toMovieCustom(): MovieCustom = MovieCustom(
     id = this.id,

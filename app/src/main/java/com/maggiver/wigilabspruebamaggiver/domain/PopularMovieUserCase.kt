@@ -36,6 +36,9 @@ class PopularMovieUserCase @Inject constructor(private val repo: RepositoryContr
     override suspend fun invoke(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
         repo.repoGetAllMoviePopular(requireContext)
 
+    override suspend fun repoGetAllMoviePopularOneTrue(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
+        repo.repoGetAllMoviePopularOneTrue(requireContext)
+
     override suspend fun updateMovieFavoriteUseCase(
         favoriteState: Boolean,
         idMovie: Int

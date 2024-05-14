@@ -8,6 +8,7 @@ import com.maggiver.wigilabspruebamaggiver.data.provider.local.entity.toMovieCus
 import com.maggiver.wigilabspruebamaggiver.data.provider.local.serviceLocal.DataSourceLocalContract
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.toListMovieCustom
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.toMovieEntity
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.server.DataSourceRemoteContract
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -48,22 +50,96 @@ class RepositoryImpl @Inject constructor(
     RepositoryContract {
 
     override suspend fun repoGetAllMoviePopular(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
+        flow {
+            //emit(ResourceState.LoadingState())
+            try {
+                if (ConnectionManager.isNetworkAvailable(requireContext)) {
+
+
+                    val moviePopularRemote = dataSourceRemote.getMoviePopularRemote()
+                    val dataResponse = moviePopularRemote
+
+                    if (dataResponse.isSuccessful) {
+                        val data = dataResponse.body()
+                        if (data != null) {
+
+                            var dataMovieCustom = data.toListMovieCustom()
+                            emit(ResourceState.SuccesState(dataMovieCustom))
+
+                        } else {
+                            val error = dataResponse.errorBody()
+                            if (error != null) {
+                                emit(ResourceState.FailureState(Throwable(error.toString())))
+                            } else {
+                                emit(ResourceState.FailureState(Throwable("Algo no salio bien, estamos trabajando para solucionarlo.")))
+                            }
+                        }
+                    } else {
+                        emit(
+                            ResourceState.FailureState(
+                                Throwable(
+                                    dataResponse.errorBody().toString()
+                                )
+                            )
+                        )
+                    }
+
+                } else {
+                    //emit(ResourceState.FailureState(throw NullPointerException("No Connecction to internet")))
+                    emit(ResourceState.FailureState(Throwable("No Connecction to internet.")))
+                }
+
+            } catch (e: Throwable) {
+                emit(ResourceState.FailureState(e))
+            }
+        }
+
+    override suspend fun repoGetAllMoviePopularOneTrue(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
         channelFlow {
 
             send(ResourceState.LoadingState())
+            try {
+                if (ConnectionManager.isNetworkAvailable(requireContext)) {
 
-            val dataMovieResponse: ResourceState.SuccesState<PopularMovieResponse>
-            if (ConnectionManager.isNetworkAvailable(requireContext)) {
-                dataMovieResponse = dataSourceRemote.getMoviePopularRemote()
+                    val dataResponse = dataSourceRemote.getMoviePopularRemote()
+                    if (dataResponse.isSuccessful) {
+                        val data = dataResponse.body()
+                        if (data != null) {
 
-                //saved local movies
-                insertAllMovieRemote(dataMovieResponse.data)
+                            var dataMovieCustom = data.toListMovieCustom()
+                            send(ResourceState.SuccesState(dataMovieCustom))
+
+                        } else {
+                            val error = dataResponse.errorBody()
+                            if (error != null) {
+                                send(ResourceState.FailureState(Throwable(error.toString())))
+                            } else {
+                                send(ResourceState.FailureState(Throwable("Algo no salio bien, estamos trabajando para solucionarlo.")))
+                            }
+                        }
+                    } else {
+                        send(
+                            ResourceState.FailureState(
+                                Throwable(
+                                    dataResponse.errorBody().toString()
+                                )
+                            )
+                        )
+                    }
+
+                } else {
+                    //emit(ResourceState.FailureState(throw NullPointerException("No Connecction to internet")))
+                    send(ResourceState.FailureState(Throwable("No Connecction to internet.")))
+                }
+
+            } catch (e: Throwable) {
+                send(ResourceState.FailureState(e))
             }
 
             val movieCustom: MutableList<MovieCustom> = mutableListOf()
             getAllMovie()
                 .flowOn(Dispatchers.IO)
-                .collect(){movieEntity ->
+                .collect() { movieEntity ->
                     movieEntity.map { movie ->
                         movieCustom.add(movie.toMovieCustom())
                     }

@@ -1,5 +1,6 @@
 package com.maggiver.wigilabspruebamaggiver.core.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.AppDatabaseRoom
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RoomModuleDatabase {
+object ModuleProvideObject {
 
     private const val BD_NAME_ROOM = "MoviesWigilabs"
 
@@ -51,5 +52,6 @@ object RoomModuleDatabase {
     @Singleton
     @Provides
     fun provideLocalDao(db: AppDatabaseRoom) = db.movieDao()
+
 
 }

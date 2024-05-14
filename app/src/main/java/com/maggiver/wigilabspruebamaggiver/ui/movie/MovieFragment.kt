@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,6 @@ import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.databinding.FragmentMovieBinding
 import com.maggiver.wigilabspruebamaggiver.presentation.PopularMovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -60,7 +58,7 @@ class MovieFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModelPopularMovie.moviePopular1(requireContext()).collect()*/
 
-        viewModelPopularMovie.moviePopular2(requireContext())
+        viewModelPopularMovie.moviePopular4()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModelPopularMovie.uiState.collect() {

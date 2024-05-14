@@ -31,6 +31,8 @@ interface PopularMovieUserCaseContract {
 
     suspend operator fun invoke(requireContext: Context): Flow<ResourceState<List<MovieCustom>>>
 
+    suspend fun repoGetAllMoviePopularOneTrue(requireContext: Context): Flow<ResourceState<List<MovieCustom>>>
+
     suspend fun updateMovieFavoriteUseCase(favoriteState: Boolean, idMovie: Int) : ResourceState<Boolean>
 
     suspend fun getAllMoviesFavoriteUseCase(): ResourceState<List<MovieCustom>>

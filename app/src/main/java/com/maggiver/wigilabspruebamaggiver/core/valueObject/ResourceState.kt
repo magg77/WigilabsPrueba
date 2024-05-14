@@ -30,7 +30,7 @@ sealed class ResourceState<T> {
 }
 
 sealed class ApiState<out T> {
-    object Loading : ApiState<Nothing>()
+    data object Loading : ApiState<Nothing>()
     data class Success<out T>(val data: T): ApiState<T>()
     data class Failure(val exception: Throwable): ApiState<Nothing>()
 
@@ -57,3 +57,9 @@ sealed class NetworkResult<T>(
     class Error<T>(message: String, data: T? = null) : NetworkResult<T>(data, message)
     class Loading<T> : NetworkResult<T>()
 }
+
+data class LatestNewsUiState(
+    val news: List<String> = emptyList(),
+    val isLoading: Boolean = false,
+    val userMessage: String? = null
+)

@@ -1,27 +1,28 @@
 package com.maggiver.wigilabspruebamaggiver.presentation
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.BaseApplication
-import com.maggiver.wigilabspruebamaggiver.core.valueObject.NetworkResult
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
 import com.maggiver.wigilabspruebamaggiver.domain.PopularMovieUserCaseContract
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,19 +50,16 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovieUserCaseContract) :
+class PopularMovieViewModel @Inject constructor(
+    private val useCase: PopularMovieUserCaseContract,
+    private val application: Application
+) :
     ViewModel() {
 
-    /*
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
-    */
 
     private val _uiState: MutableStateFlow<ResourceState<List<MovieCustom>>> =
         MutableStateFlow(ResourceState.LoadingState())
-    val uiState: StateFlow<ResourceState<List<MovieCustom>>> = _uiState
+    val uiState: StateFlow<ResourceState<List<MovieCustom>>> = _uiState.asStateFlow()
 
     @get:Inject
     val baseApplication: BaseApplication
@@ -80,39 +78,76 @@ class PopularMovieViewModel @Inject constructor(private val useCase: PopularMovi
             }
         }*/
 
-    fun moviePopular1(context: Context) = flow<ResourceState<List<MovieCustom>>> {
+    //not work
+    val moviePopular1 = flow<ResourceState<List<MovieCustom>>> {
         runCatching {
-            useCase.invoke(context)
-        }.onSuccess {
-            it.map { resourceList ->
-                emit(resourceList)
-            }
-        }.onFailure { throwable ->
-            emit(ResourceState.FailureState(throwable))
+            useCase.invoke(application.applicationContext)
         }
+            .onSuccess { data: Flow<ResourceState<List<MovieCustom>>> ->
+                data.map { resourceList ->
+                    emit(resourceList)
+                }
+            }
+            .onFailure { throwable ->
+                emit(ResourceState.FailureState(throwable))
+            }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = ResourceState.LoadingState()
     )
 
-    fun moviePopular2(context: Context) = viewModelScope.launch {
-        useCase.invoke(context)
-            .onEach {
-                _uiState.value = it
-            }.launchIn(viewModelScope)
-    }
-
-
-    /*fun moviePopular3() = viewModelScope.launch {
-        _uiState.value = ResourceState.LoadingState()
-        useCase.invoke(baseApplication)
+    //it works ok
+    fun moviePopular2() = viewModelScope.launch {
+        useCase
+            .invoke(application.applicationContext)
+            .onStart {
+                _uiState.value = ResourceState.LoadingState()
+            }
             .catch { e ->
                 _uiState.value = ResourceState.FailureState(e)
-            }.collect{
-                _uiState.value = ResourceState.SuccesState(it)
             }
-    }*/
+            .collect {
+                when (it) {
+                    is ResourceState.SuccesState -> {
+                        _uiState.value = ResourceState.SuccesState(it.data)
+                    }
+
+                    else -> {}
+                }
+            }
+    }
+
+    //it works ok
+    fun moviePopular3() = viewModelScope.launch {
+        useCase
+            //.repoGetAllMoviePopularOneTrue(BaseApplication.CONTEXT_MY_APP)
+            .invoke(application.applicationContext)
+            .onEach {
+                _uiState.value = it
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun moviePopular4() = viewModelScope.launch {
+        useCase
+            .invoke(application.applicationContext)
+            .onStart {
+                _uiState.value = ResourceState.LoadingState()
+            }
+            .catch {
+                _uiState.value = ResourceState.FailureState(it)
+            }
+            .collect() {
+                when (it) {
+                    is ResourceState.SuccesState -> {
+                        _uiState.value = ResourceState.SuccesState(it.data)
+                    }
+
+                    else -> {}
+                }
+            }
+    }
 
 
     fun updateMovieFavoriteViewModel(favoriteState: Boolean, idMovie: Int) =

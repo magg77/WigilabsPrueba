@@ -33,8 +33,8 @@ interface RepositoryContract {
     //REMOTE
     suspend fun repoGetAllMoviePopular(requireContext: Context): Flow<ResourceState<List<MovieCustom>>>
 
-
     //LOCAL
+    suspend fun repoGetAllMoviePopularOneTrue(requireContext: Context): Flow<ResourceState<List<MovieCustom>>>
 
     suspend fun insertAllMovieRemote(data: PopularMovieResponse)
 

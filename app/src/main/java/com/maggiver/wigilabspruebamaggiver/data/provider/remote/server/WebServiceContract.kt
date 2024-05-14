@@ -1,6 +1,7 @@
 package com.maggiver.wigilabspruebamaggiver.data.provider.remote.server
 
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -32,5 +33,6 @@ interface WebServiceContract {
     suspend fun GetMoviePopularRemote(
         @Query("api_key") api_key: String,
         @Query("language") language: String
-    ): PopularMovieResponse
+    ): Response<PopularMovieResponse>
+
 }

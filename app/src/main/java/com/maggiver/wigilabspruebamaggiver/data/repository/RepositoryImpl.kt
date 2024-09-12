@@ -92,7 +92,7 @@ class RepositoryImpl @Inject constructor(
             } catch (e: Throwable) {
                 emit(ResourceState.FailureState(e))
             }
-        }
+        }.flowOn(Dispatchers.IO)
 
     override suspend fun repoGetAllMoviePopularOneTrue(requireContext: Context): Flow<ResourceState<List<MovieCustom>>> =
         channelFlow {

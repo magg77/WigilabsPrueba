@@ -3,7 +3,6 @@ package com.maggiver.wigilabspruebamaggiver.domain
 import android.content.Context
 import com.maggiver.wigilabspruebamaggiver.core.valueObject.ResourceState
 import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.MovieCustom
-import com.maggiver.wigilabspruebamaggiver.data.provider.remote.model.PopularMovieResponse
 import com.maggiver.wigilabspruebamaggiver.data.repository.RepositoryContract
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

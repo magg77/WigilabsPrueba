@@ -54,7 +54,7 @@ class MovieFragment : Fragment() {
 
     private fun setupObservers() {
 
-        /*iewLifecycleOwner.lifecycleScope.launch {
+        /*viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModelPopularMovie.moviePopular1(requireContext()).collect()*/
 
